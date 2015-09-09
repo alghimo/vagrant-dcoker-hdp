@@ -68,8 +68,8 @@ docker commit s2 s2-hdpunsecure:2.3
 
 ** You can stop your containers by running:
 ```
-docker kill m1 m2 s1 s2 ambari
-docker rm m1 m2 s1 s2 ambari
+docker kill $(docker ps -a -q)
+docker rm $(docker ps -a -q)
 ```
 
 ** After this, remember that if you want to run your already setup cluster again, you need to run the images you just commited:
