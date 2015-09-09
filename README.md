@@ -1,6 +1,9 @@
+Build the sandbox:
+docker build -t node-sandbox:0.1 node-sandbox/
+
 Build images:
-docker build -t cluster-node:0.1 /projects/hdp-cluster-unsecure/cluster-node
-docker build -t ambari:2.1 /projects/hdp-cluster-unsecure/ambari
+docker build -t cluster-node:0.1 hdp-cluster-unsecure/cluster-node
+docker build -t ambari:2.1 hdp-cluster-unsecure/ambari
 
 Create network so containers can see each other:
 docker network create hdpcluster

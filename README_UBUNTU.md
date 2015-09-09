@@ -1,20 +1,26 @@
+Build the sandbox:
+docker build -t node-sandbox:0.1 node-sandbox/
+
 Build images:
-docker build -t cluster-node:0.1 /projects/hdp-cluster-unsecure/cluster-node
-docker build -t ambari:2.1 /projects/hdp-cluster-unsecure/ambari
+docker build -t cluster-node:0.1 hdp-cluster-unsecure/cluster-node
+docker build -t ambari:2.1 hdp-cluster-unsecure/ambari
 
 Create network so containers can see each other:
 docker network create hdpcluster
-Used to be able to connect from outside the VM. We'll bind our ambari container to this IP:
-sudo ip addr add 10.12.0.117/21 dev eth1
 
 Creating initial nodes:
-docker run -it --name ambari -h ambari.hdpcluster -p 10.12.0.117:8090:8080 --publish-service ambari.hdpcluster ambari:2.1
+docker run -it --name ambari -h ambari.hdpcluster -p 8080:8080 --publish-service ambari.hdpcluster ambari:2.1
 service sshd start
 service ntpd start
 setenforce 0
 ambari-server start
 
 docker run -it --name m1 -h m1.hdpcluster --publish-service m1.hdpcluster cluster-node:0.1
+service sshd start
+service ntpd start
+setenforce 0
+
+docker run -it --name m2 -h m2.hdpcluster --publish-service m2.hdpcluster cluster-node:0.1
 service sshd start
 service ntpd start
 setenforce 0

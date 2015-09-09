@@ -70,12 +70,12 @@ Vagrant.configure(2) do |config|
     sudo apachectl restart
   SHELL
 
-  # config.vm.provision "shell", run: "always", inline: <<-SHELL
-  #   echo "\033[32mCreating docker network 'hdpcluster'\033[0m\n"
-  #   echo "docker network create hdpcluster\n"
-  #   docker network create hdpcluster
-  #   echo "\033[32mCreating bind address for interface eth1\033[0m\n"
-  #   echo "sudo ip addr add 10.12.0.117/21 dev eth1\n"
-  #   sudo ip addr add 10.12.0.117/21 dev eth1
-  # SHELL
+  config.vm.provision "shell", run: "always", inline: <<-SHELL
+    echo "\033[32mCreating docker network 'hdpcluster'\033[0m\n"
+    echo "docker network create hdpcluster\n"
+    docker network create hdpcluster
+    echo "\033[32mCreating bind address for interface eth1\033[0m\n"
+    echo "sudo ip addr add 10.12.0.117/21 dev eth1\n"
+    sudo ip addr add 10.12.0.117/21 dev eth1
+  SHELL
 end
