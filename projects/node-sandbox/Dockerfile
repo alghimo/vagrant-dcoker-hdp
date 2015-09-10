@@ -25,3 +25,8 @@ RUN yum -y install openssh-server openssh-clients
 RUN chkconfig sshd on
 RUN chkconfig ntpd on
 RUN setenforce 0;exit 0
+RUN curl -v -j -k -L -H "Cookie:oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip  > /tmp/jce_policy-8.zip
+RUN unzip /tmp/jce_policy-8.zip
+RUN rm -f /etc/alternatives/jre/lib/security/*.jar
+RUN cp UnlimitedJCEPolicyJDK8/* /etc/alternatives/jre/lib/security/
+RUN yum -y install which

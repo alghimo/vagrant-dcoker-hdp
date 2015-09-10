@@ -6,3 +6,5 @@ RUN yum install -y krb5-server krb5-libs krb5-workstation
 ADD krb5.conf /etc/
 ADD kdc.conf /var/kerberos/krb5kdc/
 ADD kadm.acl /var/kerberos/krb5kdc/
+ADD kadm.acl /var/kerberos/krb5kdc/kadm5.acl
+EXPOSE 88
