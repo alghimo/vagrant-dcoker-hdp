@@ -1,9 +1,11 @@
-# Build the kerberos image
+# Setup the Kerberos node
+## Build the kerberos image
 ```shell
 docker build -t kerberos:0.1 projects/hdp-cluster-kerberos/kerberos
 ```
 
-# Run the kerberos node and create the kerberos db and the admin principal:
+## Create Kerberos DB and principal
+* Run the kerberos container and run the commands to create the db and the admin principal:
 ```shell
 docker run -it --name kerberos -h kerberos.hdpcluster --publish-service kerberos.hdpcluster kerberos:0.1
 kdb5_util -r HDPCLUSTER create -s
@@ -12,7 +14,7 @@ kdb5_util -r HDPCLUSTER create -s
 kadmin.local -q "addprinc admin/admin@HDPCLUSTER" # You must enter some password here
 /etc/rc.d/init.d/kadmin restart
 ```
-- If you get stuck at "Loading random data" when creating the database with kdb5_util, run this instead:
+* If you get stuck at "Loading random data" when creating the database with kdb5_util, run this instead:
 ```shell
 mv /dev/random /dev/randomOr
 cp /dev/urandom /dev/random &
@@ -26,16 +28,17 @@ kadmin.local -q "addprinc admin/admin@HDPCLUSTER" # You must enter some password
 /etc/rc.d/init.d/kadmin restart
 ```
 
-Once installed, save your progress:
+## Save your progress
 ```shell
 docker commit kerberos kerberos-hdpsecure:2.3
 ```
-You can now kill your kerberos container:
+## Stop your kerberos container:
 docker kill kerberos
 docker rm kerberos
 
-# Start the kerberos containers (and the rest of nodes from xxx-hdpunsecure if you haven't already):
+# Kerberizing your cluster
 
+## Start the kerberos containers (and the rest of nodes from xxx-hdpunsecure if you haven't already):
 ```shell
 docker run -itP --name kerberos -h kerberos.hdpcluster --publish-service kerberos.hdpcluster kerberos-hdpsecure:2.3
 service sshd start
@@ -45,10 +48,10 @@ setenforce 0
 /etc/rc.d/init.d/kadmin start
 ```
 
-# Enabling Kerberos with Ambari:
-- Important: If you want to enable kerberos using the Ambari wizard, you will need to add the ambari host to your cluster before enabling Kerberos.
-- You can follow the [security guide from Hortonworks](http://docs.hortonworks.com/HDPDocuments/Ambari-2.1.1.0/bk_Ambari_Security_Guide/bk_Ambari_Security_Guide-20150828.pdf)
-- Some data you might need
+## Enable Kerberos with Ambari:
+* **Important: To enable kerberos using the Ambari wizard, you will need to add the ambari host to your cluster before enabling Kerberos.**
+* You can follow the [security guide from Hortonworks](http://docs.hortonworks.com/HDPDocuments/Ambari-2.1.1.0/bk_Ambari_Security_Guide/bk_Ambari_Security_Guide-20150828.pdf) for a step by step guide.
+* Some data you might need
 ```shell
 KDC Host: kerberos.hdpcluster
 Realm name: HDPCLUSTER
@@ -57,8 +60,8 @@ Kadmin host: kerberos.hdpcluster
 Admin principal: admin/admin@HDPCLUSTER
 Admin password: admin  (use the one you chose, if it was a different one)
 ```
-
-- Once kerberos is enabled, you can save your progress:
+## Save your progress
+* Once kerberos is enabled, you can save your progress:
 ```shell
 docker commit kerberos kerberos-hdpsecure:2.3
 docker commit ambari ambari-hdpsecure:2.3
