@@ -1,0 +1,15 @@
+#!/usr/bin/expect -f
+set timeout -1
+spawn kdb5_util -r HDPCLUSTER create -s
+match_max 100000
+expect -exact "Loading random data\r
+Initializing database '/var/kerberos/krb5kdc/principal' for realm 'HDPCLUSTER',\r
+master key name 'K/M@HDPCLUSTER'\r
+You will be prompted for the database Master Password.\r
+It is important that you NOT FORGET this password.\r
+Enter KDC database master key: "
+send -- "\r"
+expect -exact "\r
+Re-enter KDC database master key to verify: "
+send -- "\r"
+expect eof

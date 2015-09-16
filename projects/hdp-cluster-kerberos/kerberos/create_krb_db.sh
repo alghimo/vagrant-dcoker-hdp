@@ -1,7 +1,12 @@
 #!/bin/sh
 mv /dev/random /dev/randomOr
 cp /dev/urandom /dev/random &
-kdb5_util -r HDCLUSTER.COM create -s -P krb4dm1n
+/scripts/create_krb_db.exp
 pkill cp
 rm -f /dev/random
 mv /dev/randomOr /dev/random
+/etc/rc.d/init.d/krb5kdc start
+/etc/rc.d/init.d/kadmin start
+/scripts/create_admin_principal.exp
+/etc/rc.d/init.d/kadmin restart
+exit 0

@@ -1,0 +1,12 @@
+#!/usr/bin/expect -f
+set timeout -1
+spawn kadmin.local -q {addprinc admin/admin@HDPCLUSTER}
+match_max 100000
+expect -exact "Authenticating as principal root/admin@HDPCLUSTER with password.\r
+WARNING: no policy specified for admin/admin@HDPCLUSTER; defaulting to no policy\r
+Enter password for principal \"admin/admin@HDPCLUSTER\": "
+send -- "admin\r"
+expect -exact "\r
+Re-enter password for principal \"admin/admin@HDPCLUSTER\": "
+send -- "admin\r"
+expect eof
