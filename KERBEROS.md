@@ -1,51 +1,20 @@
 # Setup the Kerberos node
 ## Build the kerberos image
 ```shell
-docker build -t kerberos:0.1 projects/hdp-cluster-kerberos/kerberos
+docker build -t kerberos:0.1 projects/hdp-cluster/kerberos
 ```
 
 ## Create Kerberos DB and principal
 * Run the kerberos container and run the commands to create the db and the admin principal:
 ```shell
-docker run -it --name kerberos -h kerberos.hdpcluster --publish-service kerberos.hdpcluster kerberos:0.1
-kdb5_util -r HDPCLUSTER create -s
-/etc/rc.d/init.d/krb5kdc start
-/etc/rc.d/init.d/kadmin start
-kadmin.local -q "addprinc admin/admin@HDPCLUSTER" # You must enter some password here
-/etc/rc.d/init.d/kadmin restart
+docker run -d --name kerberos -h kerberos.hdpcluster --publish-service kerberos.hdpcluster kerberos:0.1
 ```
-* If you get stuck at "Loading random data" when creating the database with kdb5_util, run this instead:
-```shell
-mv /dev/random /dev/randomOr
-cp /dev/urandom /dev/random &
-kdb5_util -r HDPCLUSTER create -s
-pkill cp
-rm -f /dev/random
-mv /dev/randomOr /dev/random
-/etc/rc.d/init.d/krb5kdc start
-/etc/rc.d/init.d/kadmin start
-kadmin.local -q "addprinc admin/admin@HDPCLUSTER" # You must enter some password here
-/etc/rc.d/init.d/kadmin restart
-```
-
-## Save your progress
-```shell
-docker commit kerberos kerberos-hdpsecure:2.3
-```
-## Stop your kerberos container:
-docker kill kerberos
-docker rm kerberos
 
 # Kerberizing your cluster
 
 ## Start the kerberos containers (and the rest of nodes from xxx-hdpunsecure if you haven't already):
 ```shell
-docker run -itP --name kerberos -h kerberos.hdpcluster --publish-service kerberos.hdpcluster kerberos-hdpsecure:2.3
-service sshd start
-service ntpd start
-setenforce 0
-/etc/rc.d/init.d/krb5kdc start
-/etc/rc.d/init.d/kadmin start
+docker run -d --name kerberos -h kerberos.hdpcluster --publish-service kerberos.hdpcluster kerberos-hdpsecure:2.3
 ```
 
 ## Enable Kerberos with Ambari:

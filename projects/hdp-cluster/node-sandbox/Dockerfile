@@ -13,8 +13,8 @@ RUN yum -y install java-1.8.0-openjdk.x86_64
 
 # add ssh key
 RUN mkdir -p /root/.ssh
-ADD ssh/id_rsa /root/.ssh/
-ADD ssh/id_rsa.pub /root/.ssh/
+COPY ssh/id_rsa /root/.ssh/
+COPY ssh/id_rsa.pub /root/.ssh/
 RUN cat /root/.ssh/id_rsa.pub >> /root/.ssh/authorized_keys
 RUN chmod 700 /root/.ssh/id_rsa*
 RUN chmod 600 ~/.ssh/authorized_keys
@@ -30,3 +30,5 @@ RUN unzip /tmp/jce_policy-8.zip
 RUN rm -f /etc/alternatives/jre/lib/security/*.jar
 RUN cp UnlimitedJCEPolicyJDK8/* /etc/alternatives/jre/lib/security/
 RUN yum -y install which
+RUN yum -y install python-setuptools
+RUN easy_install supervisor

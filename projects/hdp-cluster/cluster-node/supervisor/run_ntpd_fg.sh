@@ -1,8 +1,8 @@
 #! /usr/bin/env bash
 set -eu
 
-pidfile="/var/run/sshd.pid"
-command="/usr/sbin/sshd -D"
+pidfile="/var/run/ntpd.pid"
+command="/usr/sbin/ntpd -n -p /var/run/ntpd.pid"
 
 # Proxy signals
 function kill_app(){
