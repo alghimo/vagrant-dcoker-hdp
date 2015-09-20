@@ -4,15 +4,9 @@
 docker build -t kerberos:0.1 projects/hdp-cluster/kerberos
 ```
 
-## Create Kerberos DB and principal
-* Run the kerberos container and run the commands to create the db and the admin principal:
-```shell
-docker run -d --name kerberos -h kerberos.hdpcluster --publish-service kerberos.hdpcluster kerberos:0.1
-```
-
 # Kerberizing your cluster
 
-## Start the kerberos containers (and the rest of nodes from xxx-hdpunsecure if you haven't already):
+## Start the kerberos container (and the rest of nodes from xxx-hdpunsecure if you haven't already):
 ```shell
 docker run -d --name kerberos -h kerberos.hdpcluster --publish-service kerberos.hdpcluster kerberos-hdpsecure:2.3
 ```
@@ -38,4 +32,15 @@ docker commit m1 m1-hdpsecure:2.3
 docker commit m2 m2-hdpsecure:2.3
 docker commit s1 s1-hdpsecure:2.3
 docker commit s2 s2-hdpsecure:2.3
+```
+
+## Starting your kerberized cluster
+* To run the kerberized cluster, you need to run the images you just commited. You don't need to start any services anymore, supervisor will do it for you:
+```shell
+docker run -d --name kerberos -h kerberos.hdpcluster --publish-service kerberos.hdpcluster kerberos-hdpsecure:2.3
+docker run -d --name ambari -h ambari.hdpcluster -p 8080:8080 --publish-service ambari.hdpcluster ambari-hdpunsecure:2.3
+docker run -d --name m1 -h m1.hdpcluster --publish-service m1.hdpcluster m1-hdpunsecure:2.3
+docker run -d --name m2 -h m2.hdpcluster --publish-service m2.hdpcluster m2-hdpunsecure:2.3
+docker run -d --name s1 -h s1.hdpcluster --publish-service s1.hdpcluster s1-hdpunsecure:2.3
+docker run -d --name s2 -h s2.hdpcluster --publish-service s2.hdpcluster s2-hdpunsecure:2.3
 ```
